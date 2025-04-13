@@ -73,7 +73,7 @@ we define macro dimensions, pin locations and rows which are to be used during p
 Power planning ensures that all the supply and ground rails are laced across the chip in a way to reduce 
 Electromigration and IR drop. The thicker metal layers are used as supply rails as there is lesser IR 
 drop in them as compared to the thinner metal layers.
-![alt text](image-6.png)  ![alt text](image-7.png)   
+![alt text](image-6.png)  ![alt text](image-7.png)  
 ![alt text](image-8.png)
 
 - **Placement**: 
@@ -141,5 +141,78 @@ violations can be checked using a new tool.
 
 ## Familiarization with EDA tools: 
 
+### PDKs and their details: 
+
+In the given VM, under the folder ```~/Desktop/work/tools/openlane_working_dir```
+we see 2 sub directories, 1 is openlane and the other is pdks. openlane_old is added in our case but it 
+can be assumed to have same functionality as openlane with version changes. 
+
+In the **pdks** subdirectory, we can see that there are 3 sub directories, open_pdks, sky130A and 
+skywater_pdks. in the open_pdks subdirectory we see that there are open source pdks tuned to and 
+available for each tool, there are tool specific and process specific pdks, there are pdks such as 
+*sky130_fc_sc_hd* which we will be using throughout. fd means foundry name, sc means standard cells and 
+hd means high density.
 
 
+**Lab-01: exploring file structure and working with the flow:**
+
+go to the path ```~/Desktop/work/tools/openlane_working_dir/openlane``` and type docker. this should 
+open up a bash command line from a docker image. After this we run ```./flow.tcl -interactive```. This 
+is because using ```./flow.tcl``` alone would automate the whole thing and not allow us to run tools and 
+processes step by step, as was the aim of openlane. This should now open up and interactive tcl command 
+line. make sure to enter ```package require openlane 0.9``` to import openlane into the session and then 
+proceed. Things should look as below: 
+![alt text](image-18.png)
+
+The percentage symbol indicates that tcl scripting is active. 
+
+
+Now as for the design files that openlane works on, they must be in the designs directory following the 
+path: ```~/Desktop/work/tools/openlane_working_dir/openlane/designs``` These design folders have files 
+like config.tcl and sky130_fc_sc_hd_config.tcl to help set certain evnronment variables and source some 
+files which can be used by scripts to automate the flow. The sky130_fc_sc_hd_config.tcl overrides 
+certain features set by config.tcl in this flow.
+
+
+Now we specify to the openlane tcl command line what design we are running, for this we use.
+ 
+```prep -design picorv32a```
+the execution should look something like this: 
+![alt text](image-19.png)
+
+The lef files are merged at the start to avoid referencing and accessing multiple files.
+
+Now, the folder picorv32a has a new folder under it's subfolder 'runs'. This 'runs' folder further has 
+subdirectories where temporaries, logs, reports and results will be stored.
+![alt text](image-20.png)
+
+There is also a config.tcl file in this folder, this config.tcl shows the defaults used during the run. 
+this config file is almost like a log that shows what configs that were run.
+
+
+Next we run synthesis, for this we use 
+```run_synthesis```
+
+This command runs synthesis, various standard cells from our pdk have been used here and all details 
+are printed on the screen. we can look at how many standard cells are used looking at the tabulated data
+printed out towards the end of the synthesis logs on screen. From this we can infer important 
+information like the flop ratio. The flop ratio is basically the ratio of the number of d-flipflops used 
+to that of the total number of standard cells used
+
+> flop ratio = (no.of DFFs standard cells used) / (total no.of standard cells used)
+
+synthesis log: 
+![alt text](image-21.png)
+
+from here we can see that the no.of d-flipflop cells are 1613 and the total no.of cells are 14876. 
+Hence our flop ratio: 
+
+> flop ratio = 0.1084
+
+![alt text](image-22.png)
+
+as can be seen, the reports have been generated accordingly as the synthesis has progressed. Similarly, 
+pre-layout and sta reports have been generated. 
+
+
+# -----------------end of day-1------------------------
