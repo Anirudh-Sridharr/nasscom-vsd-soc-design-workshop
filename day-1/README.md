@@ -214,5 +214,3 @@ Hence our flop ratio:
 as can be seen, the reports have been generated accordingly as the synthesis has progressed. Similarly, 
 pre-layout and sta reports have been generated. 
 
-
-# -----------------end of day-1------------------------
