@@ -94,9 +94,7 @@ routing, and blockages. It plays a key role in communicating the design's physic
 tools during verification and optimization stages.
 
 the command used to invoke magic is 
-```
-magic -T /home/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/tmp/merged.lef def read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/results/floorplan/picorv32a.floorplan.def &
-```
+```magic -T /home/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/tmp/merged.lef def read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/results/floorplan/picorv32a.floorplan.def &```
 a tcl command window and a layout window open, the layout window should look like this: 
 ![alt text](image-6.png)
 
@@ -113,4 +111,53 @@ the tcl command window can give us information as in the image below:
 ### Placement and Routing Theory: 
 All cells as seen in synthesis diagrams and circuit diagrams are not in their specified shapes, all are
 rectangular blocks that can be placed in a cell. These rectangular blocks these cells have their physical
-and timing information
+and timing information. A collection of these information are called library. There are options for 
+cells, there are variants of different sizes and timings. 
+
+While placing cells, we may encounter problems such as sparsely placed cells for a netlist, then there 
+could be distance between a cell and it's respective i/o pin. Thus we must optimize placements to have 
+minimal distance across respective components. However, not in all cases will it be possible to have 
+situations where signal integrity is maintained. Hence, we place repeaters (buffers) to re-generate the
+signal and then provide it in significant strength to the next element in the desired netlist. 
+
+Cells may be joined in order to avoid wire transmission delays. 
+
+The routing for the netlist on the left may be done as that for the netlist on the right, Buff means
+buffer and the rest are cells for ff, gates and all that. 
+
+![alt text](image-8.png)
+
+### Placement and routing labs: 
+
+The following placement that is being done is done based on congestion only, no timing analysis is 
+involved here. 
+
+Placement is run in 2 stages as discussed in day-1, Detailed placement is required from a more timing 
+point of view. Half parameter wire length is used in openlane to optimize. Placement is considered legal
+when there are no overlaps across the cells in the design. 
+
+```run_placement``` 
+is used on the vm to run the placement. 
+
+the placement is run and it writes some files and prints some design stats. They are as below:
+![alt text](image-9.png)
+
+We can view the placed layout in magic. the command is similar, except for we use the new def file 
+instead: 
+
+```magic -T /home/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/tmp/merged.lef def read /home/Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/"latest_run"/results/placement/picorv32a.placement.def &```
+
+the designname.placement.def file is in the below folder: 
+![alt text](image-10.png)
+
+The layout: 
+![alt text](image-11.png)
+
+The layout can be zoomed into and explored just like it was done during floorplanning. 
+
+**Cell design and library characterization:**
+So libraries typically contain information about threshold voltage, drive strength and timing. These 
+info can be used to model nets from existing cells that can then be used in the physical design of the 
+circuit. It is important to choose thersholds after considering information like slew and delay so that 
+there isn't any ambiguity in calculations. 
+
