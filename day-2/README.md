@@ -111,4 +111,6 @@ the tcl command window can give us information as in the image below:
 
 
 ### Placement and Routing Theory: 
-All cells as seen in synthesis 
+All cells as seen in synthesis diagrams and circuit diagrams are not in their specified shapes, all are
+rectangular blocks that can be placed in a cell. These rectangular blocks these cells have their physical
+and timing information
